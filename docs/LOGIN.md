@@ -36,3 +36,9 @@ Não há confirmação de email nem recuperação automática de senha. Os email
 Os testes locais simulam o Apps Script e verificam cadastro, login, erro de senha, duplicidade, isolamento do progresso, registros e logout. A conexão real, permissões, redirecionamento do Content Service e acesso entre origens devem ser conferidos com a implantação publicada. Não use `fetch` com `mode: no-cors`: ele impede ler e validar a resposta.
 
 Referências oficiais: [Web Apps](https://developers.google.com/apps-script/guides/web), [Content Service](https://developers.google.com/apps-script/guides/content), [Properties Service](https://developers.google.com/apps-script/reference/properties/properties-service).
+
+## Atualização para reduzir a espera
+
+A versão atual prepara o salt enquanto o participante preenche o formulário. O backend evita reler a planilha e atualizar duas vezes a mesma linha durante cadastro/login; as consultas de preparação não aguardam o bloqueio de escrita.
+
+Para aplicar a otimização no servidor, substitua `Code.gs` e use **Implantar → Gerenciar implantações → Editar → Versão: nova versão → Implantar**. Preserve as propriedades do script e o mesmo endereço `/exec`; não execute uma nova configuração nem apague o segredo. A latência do serviço Google permanece variável.

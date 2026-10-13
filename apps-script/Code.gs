@@ -28,6 +28,8 @@ function doPost(event) {
     if (!event || !event.postData || event.postData.contents.length > 4096) throw new Error('INVALID');
     const input = JSON.parse(event.postData.contents);
     if (!['challenge', 'register', 'login', 'session', 'logout'].includes(input.action)) throw new Error('INVALID');
+    // Challenge only reads properties; do not queue it behind spreadsheet writes.
+    if (input.action === 'challenge') return json_({ ok: true, ...handleAuth_(input) });
     lock = LockService.getScriptLock();
     if (!lock.tryLock(15000)) throw new Error('BUSY');
     const result = handleAuth_(input);
@@ -58,7 +60,8 @@ function handleAuth_(input) {
   if (attempts >= 10) throw new Error('LIMIT');
   cache.put(limitKey, String(attempts + 1), 900);
   if (typeof input.proof !== 'string' || !/^[a-f0-9]{64}$/.test(input.proof)) throw new Error('INVALID');
-  const sheet = book_().getSheetByName('Participantes');
+  const book = book_();
+  const sheet = book.getSheetByName('Participantes');
   const rows = sheet.getLastRow() > 1 ? sheet.getRange(2, 1, sheet.getLastRow() - 1, 7).getValues() : [];
   const index = rows.findIndex(row => row[2] === email);
   const verifier = mac_('credential:' + email + ':' + input.proof);
@@ -68,12 +71,16 @@ function handleAuth_(input) {
     const name = typeof input.name === 'string' ? input.name.trim().replace(/\s+/g, ' ') : '';
     if (!name || name.length > 80 || /^[=+\-@]/.test(name) || /[\x00-\x1f]/.test(name)) throw new Error('INVALID');
     user = { id: Utilities.getUuid(), name, email };
-    sheet.appendRow([user.id, name, email, verifier, new Date(), '', 0]);
+    const now = new Date();
+    sheet.appendRow([user.id, name, email, verifier, now, now, 1]);
+    book.getSheetByName('Acessos').appendRow([now, user.id, 'cadastro']);
   } else {
     if (index < 0 || !equal_(String(rows[index][3]), verifier)) throw new Error('AUTH');
     user = { id: String(rows[index][0]), name: String(rows[index][1]), email };
+    const now = new Date();
+    sheet.getRange(index + 2, 6, 1, 2).setValues([[now, Number(rows[index][6]) + 1]]);
+    book.getSheetByName('Acessos').appendRow([now, user.id, 'login']);
   }
-  recordAccess_(user.id, input.action === 'register' ? 'cadastro' : 'login');
   cache.remove(limitKey);
   const token = mac_('session:' + Utilities.getUuid() + ':' + Utilities.getUuid());
   cache.put('session:' + token, JSON.stringify(user), SESSION_SECONDS);

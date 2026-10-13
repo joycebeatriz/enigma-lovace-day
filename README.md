@@ -37,6 +37,7 @@ tests/               Testes do backend com serviços simulados
 legacy/              Código anterior, fora do jogo atual
 FINAL.md             Etapa final para participantes
 Makefile             Comandos de desenvolvimento
+vercel.json          Build e redirecionamento da hospedagem Vercel
 ```
 
 `build/` guarda arquivos compilados locais e não entra no Git.
@@ -54,7 +55,7 @@ make reveal
 
 ## Desenvolvimento e publicação
 
-Não há etapa de build nem dependências JavaScript. Para conferir a sintaxe, com Node.js instalado:
+Para desenvolvimento local não há build nem dependências JavaScript. No Vercel, `tools/build-site.mjs` prepara apenas os arquivos públicos em `build/site/`, conforme `vercel.json`. Para conferir a sintaxe, com Node.js instalado:
 
 ```bash
 make check-js

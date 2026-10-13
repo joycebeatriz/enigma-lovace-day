@@ -4,6 +4,8 @@
   const el = (id) => document.getElementById(id);
   let mode = "login";
   let session = null;
+  const challenges = new Map();
+  let pending = false;
   const messages = {
     AUTH: "Email ou senha incorretos. Confira e tente novamente.",
     EXISTS: "Este email já tem cadastro. Use a opção Entrar.",
@@ -25,20 +27,58 @@
     return url;
   }
   async function request(input) {
-    const response = await fetch(endpoint(), {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(input),
-      redirect: "follow",
-      credentials: "omit",
-      signal: AbortSignal.timeout(30000),
-    });
+    let response;
+    try {
+      response = await fetch(endpoint(), {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(input),
+        redirect: "follow",
+        credentials: "omit",
+        signal: AbortSignal.timeout(30000),
+      });
+    } catch (error) {
+      if (error.name === "TimeoutError" || error.name === "AbortError")
+        throw new Error(
+          "O Google demorou para responder. Tente novamente; se o cadastro já foi criado, use Entrar.",
+        );
+      throw error;
+    }
     if (!response.ok) throw new Error(messages.UNAVAILABLE);
     const result = await response.json();
     if (!result.ok)
       throw new Error(messages[result.code] || messages.UNAVAILABLE);
     return result;
   }
+  function getChallenge(email) {
+    const cached = challenges.get(email);
+    if (cached && Date.now() - cached.created < 300000) return cached.promise;
+    const promise = request({ action: "challenge", email }).catch((error) => {
+      challenges.delete(email);
+      throw error;
+    });
+    challenges.set(email, { created: Date.now(), promise });
+    return promise;
+  }
+  let preparationTimer;
+  el("auth-email").addEventListener("input", () => {
+    clearTimeout(preparationTimer);
+    preparationTimer = setTimeout(() => {
+      if (el("auth-email").checkValidity())
+        getChallenge(el("auth-email").value.trim().toLowerCase()).catch(
+          () => {},
+        );
+    }, 400);
+  });
+  el("auth-password").addEventListener("focus", () => {
+    if (el("auth-email").checkValidity())
+      getChallenge(el("auth-email").value.trim().toLowerCase()).catch(() => {});
+  });
+  el("auth-email").addEventListener("blur", () => {
+    if (el("auth-email").checkValidity()) {
+      getChallenge(el("auth-email").value.trim().toLowerCase()).catch(() => {});
+    }
+  });
   async function passwordProof(password, challenge) {
     if (
       !/^[a-f0-9]{32}$/.test(challenge.salt) ||
@@ -108,16 +148,28 @@
   );
   el("auth-form").addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (pending) return;
+    pending = true;
+    el("auth-form").setAttribute("aria-busy", "true");
     el("auth-submit").disabled = true;
     el("auth-toggle").disabled = true;
-    el("auth-status").textContent = "Conectando…";
+    el("auth-status").textContent = "Preparando seu acesso…";
+    const slowNotice = setTimeout(() => {
+      el("auth-status").textContent =
+        "O Google está demorando um pouco. Aguarde; não precisa clicar novamente.";
+    }, 8000);
     try {
       const email = el("auth-email").value.trim().toLowerCase();
       const password = el("auth-password").value;
       if (password.length > 128)
         throw new Error("Use uma senha com até 128 caracteres.");
-      const challenge = await request({ action: "challenge", email });
+      const challenge = await getChallenge(email);
+      el("auth-status").textContent = "Protegendo sua senha…";
       const proof = await passwordProof(password, challenge);
+      el("auth-status").textContent =
+        mode === "register"
+          ? "Criando sua conta e registrando o acesso…"
+          : "Conferindo seus dados e registrando o acesso…";
       const result = await request({
         action: mode,
         email,
@@ -141,26 +193,26 @@
       el("auth-status").textContent =
         error.message.includes("login ainda") ||
         Object.values(messages).includes(error.message) ||
-        error.message.startsWith("Use uma senha")
+        error.message.startsWith("Use uma senha") ||
+        error.message.startsWith("O Google demorou")
           ? error.message
           : messages.UNAVAILABLE;
     } finally {
+      clearTimeout(slowNotice);
+      pending = false;
+      el("auth-form").setAttribute("aria-busy", "false");
       el("auth-submit").disabled = false;
       el("auth-toggle").disabled = false;
     }
   });
-  el("auth-logout").addEventListener("click", async () => {
-    el("auth-logout").disabled = true;
-    try {
-      if (session?.token)
-        await request({ action: "logout", token: session.token });
-    } catch (_) {}
+  el("auth-logout").addEventListener("click", () => {
+    const token = session?.token;
     session = null;
     try {
       sessionStorage.removeItem(SESSION_KEY);
     } catch (_) {}
     showUser(null);
-    el("auth-logout").disabled = false;
+    if (token) request({ action: "logout", token }).catch(() => {});
   });
   setMode("login");
   showUser(null);

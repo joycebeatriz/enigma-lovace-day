@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "",
+  "buildCommand": "node tools/build-site.mjs",
+  "outputDirectory": "build/site",
+  "redirects": [
+    { "source": "/", "destination": "/web/", "permanent": false }
+  ]
+}

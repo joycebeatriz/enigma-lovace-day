@@ -34,3 +34,13 @@ A interface é estática: cada dispositivo verifica respostas localmente, sem um
 Não existe ranking nem controle de vencedores. O login registra participantes e acessos, sem verificar a titularidade do email. As etapas no navegador organizam a experiência, mas podem ser inspecionadas ou burladas; os verificadores PBKDF2 não constituem segurança contra fraude. Para prêmios, a organização deve verificar a mensagem e a explicação individual, ou usar um backend de validação caso seja necessário registrar ordem de chegada.
 
 Teste os painéis em Android e iPhone antes do evento.
+
+## Publicar no Vercel
+
+Importe o repositório com **Root Directory na raiz do projeto** (campo vazio), e Framework Preset **Other**. O arquivo `vercel.json` define o build e a saída. Não configure a raiz como `web`: o build precisa das pastas `tools` e `assets`.
+
+O build executa `node tools/build-site.mjs` e copia somente `web/` e `assets/` para `build/site/`. A raiz do domínio redireciona para `/web/`, preservando os caminhos do CSS, JavaScript e retrato. Código do Apps Script, testes e arquivos locais não são enviados à hospedagem.
+
+Depois de enviar a configuração ao GitHub, faça uma nova implantação no Vercel. Uma implantação anterior não recebe arquivos novos automaticamente sem novo build.
+
+Referências: [configuração do Vercel](https://vercel.com/docs/project-configuration/vercel-json) e [configuração do build](https://vercel.com/docs/builds/configure-a-build).
