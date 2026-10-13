@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>O Enigma Lovelace · 2026</title>
+    <link rel="stylesheet" href="css/style.css?v=20261013-controlroom" />
+    <script defer src="js/config.js?v=20261013-live"></script>
+    <script defer src="js/minigames.js?v=20261013-verifiers"></script>
+    <script defer src="js/journey.js?v=20261013-verifiers"></script>
+    <script defer src="js/game-ui.js?v=participant-only"></script>
+    <script defer src="js/auth.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="#">AL<span>ENIGMA LOVELACE</span></a
+      ><span class="edition">ADA LOVELACE DAY · 2026 <i></i></span>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">UMA MISSÃO PARA MENTES CURIOSAS</p>
+          <h1>Um segredo de Ada.<br /><em>Sua próxima descoberta.</em></h1>
+          <p class="intro">
+            Quatro desafios rápidos. Uma mensagem escondida. Junte pistas, ganhe
+            pontos e descubra o que Ada deixou nos pixels. Você não precisa
+            saber programar.
+          </p>
+          <a class="button" href="#auth-section">Jogar agora <span>↗</span></a>
+        </div>
+        <figure>
+          <img
+            src="../assets/images/Ada_lovelace.png"
+            alt="Retrato de Ada Lovelace"
+          />
+          <figcaption>
+            <span>ARQUIVO 001 / ADA LOVELACE</span><span>1815 — 1852</span>
+          </figcaption>
+          <div class="seal">A descoberta<br />começa com você.</div>
+        </figure>
+      </section>
+      <section
+        id="auth-section"
+        class="auth-section"
+        aria-labelledby="auth-title"
+      >
+        <div class="auth-story">
+          <p class="eyebrow">SEU LUGAR NA MISSÃO</p>
+          <h2>Uma conta.<br />Quatro descobertas.</h2>
+          <p>
+            Cadastre-se uma vez. Depois, entre com seu email e senha para jogar.
+          </p>
+          <p class="small">
+            Nome, email e acessos serão registrados pela organização para
+            acompanhar a participação na atividade.
+          </p>
+        </div>
+        <article class="card auth-card">
+          <h3 id="auth-title">Entre para começar sua missão.</h3>
+          <form id="auth-form">
+            <div id="auth-name-field" hidden>
+              <label for="auth-name">Nome</label
+              ><input id="auth-name" autocomplete="name" maxlength="80" />
+            </div>
+            <label for="auth-email">Email</label
+            ><input
+              id="auth-email"
+              type="email"
+              autocomplete="email"
+              required
+              maxlength="254"
+            />
+            <label for="auth-password">Senha</label
+            ><input
+              id="auth-password"
+              type="password"
+              autocomplete="current-password"
+              required
+              maxlength="128"
+              aria-describedby="auth-password-help"
+            />
+            <p id="auth-password-help" class="small">
+              No cadastro, use pelo menos 8 caracteres. Escolha uma senha só
+              para esta atividade.
+            </p>
+            <button id="auth-submit" type="submit">Entrar e jogar →</button>
+          </form>
+          <p
+            id="auth-status"
+            role="status"
+            aria-live="polite"
+            class="status"
+          ></p>
+          <button id="auth-toggle" class="secondary" type="button">
+            Primeira vez? Criar conta
+          </button>
+        </article>
+      </section>
+      <div id="participant-session" class="participant-session" hidden>
+        <span id="participant-name"></span
+        ><button id="auth-logout" class="secondary" type="button">
+          Sair da conta
+        </button>
+      </div>
+      <section id="laboratorio" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">SUA ARENA</p>
+            <h2>Cada descoberta abre um caminho.</h2>
+          </div>
+          <span class="small">Jogue no seu ritmo · dicas disponíveis</span>
+        </div>
+        <div class="tools">
+          <article class="card" id="journey-card">
+            <div class="card-top">
+              <span class="number" id="stage-counter">01 / 04</span
+              ><span class="tag" id="stage-state">NÚCLEO DISPONÍVEL</span>
+            </div>
+            <ol
+              id="progress"
+              class="progress"
+              aria-label="Progresso da investigação"
+            ></ol>
+            <h3 id="stage-title">O primeiro fragmento</h3>
+            <p id="stage-intro"></p>
+            <div id="challenge" hidden>
+              <blockquote id="stage-clue"></blockquote>
+              <div id="puzzle-host"></div>
+              <form id="answer-form">
+                <input id="answer" type="hidden" /><button
+                  type="submit"
+                  id="check-answer"
+                >
+                  Conferir resposta →
+                </button>
+              </form>
+              <p
+                id="answer-status"
+                class="status"
+                role="status"
+                aria-live="polite"
+              ></p>
+              <button class="secondary" id="hint-button">
+                Preciso de uma dica
+              </button>
+              <p id="hint-text" class="hint" aria-live="polite"></p>
+            </div>
+            <div id="fragment-result" class="result" hidden>
+              <p class="eyebrow">FRAGMENTO RECUPERADO</p>
+              <p id="fragment-text"></p>
+              <p class="points-earned">+100 pontos · núcleo restaurado</p>
+              <button id="next-stage">Próxima etapa →</button>
+            </div>
+            <div id="github-finale" class="result" hidden>
+              <p class="eyebrow">QUATRO FRAGMENTOS. UMA ÚLTIMA DESCOBERTA.</p>
+              <h3>A investigação continua no GitHub.</h3>
+              <p>
+                Você reuniu as instruções. Agora baixe o PNG original e use seus
+                fragmentos para recuperar a mensagem. O texto está nos pixels,
+                não na aparência da imagem.
+              </p>
+              <a
+                class="button"
+                href="https://github.com/joycebeatriz/enigma-lovace-day/blob/main/FINAL.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Ir ao arquivo no GitHub ↗</a
+              >
+              <p class="small">
+                O link corresponde à versão que a organização deverá publicar
+                antes do evento.
+              </p>
+            </div>
+            <details>
+              <summary>Meus fragmentos recuperados</summary>
+              <ul id="inventory"></ul>
+            </details>
+            <p class="small" id="save-status">
+              Progresso salvo apenas neste navegador.
+            </p>
+            <button class="secondary reset" id="reset-progress">
+              Recomeçar missão
+            </button>
+          </article>
+        </div>
+      </section>
+      <aside id="game-note" class="note" hidden>
+        <span>✦</span>
+        <div>
+          <strong>Não precisa acertar de primeira.</strong>
+          <p>
+            Experimente, use as dicas e tente de novo. Seus pontos não diminuem.
+            Cada descoberta vale 100 pontos.
+          </p>
+        </div>
+      </aside>
+    </main>
+    <footer>
+      <span>O ENIGMA LOVELACE</span
+      ><span>Inspirado na imaginação de Ada. Movido pela sua curiosidade.</span>
+    </footer>
+  </body>
+</html>
