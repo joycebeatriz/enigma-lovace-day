@@ -1,20 +1,18 @@
-# Local build output and generated files
+# Arquivos gerados
 /build/
 __pycache__/
 *.py[cod]
 .venv/
 venv/
 node_modules/
-/legacy/cpp/esconder_texto
-/legacy/cpp/revelar_texto
 
-# Local settings and private message files
+# Configuração local
 .env
 .env.*
 !.env.example
 /private/
 
-# OS and editor files
+# Sistema e editor
 .DS_Store
 *.swp
 *.swo

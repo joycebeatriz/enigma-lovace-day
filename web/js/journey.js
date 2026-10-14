@@ -111,8 +111,7 @@ function normalizeAnswer(text) {
     .trim()
     .replace(/\s+/g, " ");
 }
-// A salted verifier avoids publishing a plain-text answer table.
-// Static verification is an activity aid, not a security boundary.
+// Hashes dificultam a leitura do gabarito.
 async function verifyStageAnswer(index, answer) {
   const verifier = STAGES[index].verifier;
   const material = await crypto.subtle.importKey(

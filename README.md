@@ -1,77 +1,39 @@
 # O Enigma Lovelace
 
-Jogo individual inspirado em Ada Lovelace: quatro desafios interativos de dificuldade baixa, dicas, fragmentos e 100 pontos por descoberta. A missão termina com uma mensagem escondida em um PNG. O progresso fica salvo no navegador, separado por conta. O login usa Google Apps Script e registra participantes e acessos em uma planilha privada.
+<p align="center">
+  <img src="assets/images/Ada_lovelace.png" alt="Retrato de Ada Lovelace" width="360">
+</p>
 
-## Jogar localmente
+## Um segredo de Ada. Sua próxima descoberta.
 
-Requer Python 3. Na raiz do repositório:
+Uma mensagem foi escondida nos pixels de uma imagem. Para descobrir o que ela diz, você precisa reunir quatro pistas: cada uma revela uma parte do caminho até o último arquivo de Ada.
 
-```bash
-make serve
-```
+Inspirado em Ada Lovelace, o desafio convida você a experimentar, observar e conectar ideias. Não precisa saber programar: curiosidade é o ponto de partida.
 
-- Participante: http://localhost:8000/web/
+**[Começar o desafio →](https://enigma-lovace-bay.vercel.app/)**
 
-Não é necessário usar câmera ou QR. O jogo tem somente o fluxo dos participantes. Para liberar o login, configure a implantação conforme [o guia de login](docs/LOGIN.md).
+## Sua missão
 
-## Estrutura
+Crie sua conta, entre no jogo e explore os quatro núcleos em sequência:
 
-```text
-assets/images/       Retrato de Ada e PNG com a mensagem
-web/
-  index.html         Página do jogo
-  css/style.css      Identidade visual e layout responsivo
-  js/
-    minigames.js     Controles dos quatro desafios
-    journey.js       Jornada, validação, dicas e persistência
-    game-ui.js       Mapa de fases, placar e reação de conquista
-    auth.js          Cadastro, login, sessão e logout
-    config.js        Endereço público da implantação Apps Script
-tools/
-  enigma.py          Criação e extração de mensagens LSB
-  requirements.txt   Dependência Python do extrator
-docs/
-  ORGANIZATION.md    Preparação do evento e publicação
-apps-script/         Backend do login para implantar no Google
-tests/               Testes do backend com serviços simulados
-legacy/              Código anterior, fora do jogo atual
-FINAL.md             Etapa final para participantes
-Makefile             Comandos de desenvolvimento
-vercel.json          Build e redirecionamento da hospedagem Vercel
-```
+| Núcleo | O que você vai fazer | Pontos |
+| --- | --- | --- |
+| **Tear** | Reconstruir uma sequência de comandos. | 100 |
+| **Pulso** | Acender luzes para recuperar um sinal. | 100 |
+| **Prisma** | Organizar canais de cor seguindo as pistas. | 100 |
+| **Eco** | Encontrar uma mudança quase invisível. | 100 |
 
-`build/` guarda arquivos compilados locais e não entra no Git.
+Cada descoberta recupera um fragmento e libera o próximo núcleo. Ao completar os quatro, você reúne **400 pontos** e as pistas para investigar a mensagem final.
 
-## Mensagem final
+## Jogue no seu ritmo
 
-As instruções dos participantes estão em [FINAL.md](FINAL.md). Para instalar a dependência e extrair a mensagem:
+- A jornada é individual e não tem limite de tempo.
+- Cada desafio oferece dicas para ajudar você a avançar.
+- Você pode tentar novamente: erros e dicas não descontam pontos.
+- Seu progresso fica salvo neste navegador, separado por conta.
 
-```bash
-python3 -m pip install -r tools/requirements.txt
-make reveal
-```
+## O último arquivo
 
-**Preparação pendente:** o PNG com texto ainda é da edição anterior. A organização deve gerar e conferir a mensagem desta edição antes de divulgar o jogo. Veja [o guia da organização](docs/ORGANIZATION.md).
+Depois de recuperar os quatro fragmentos, siga para [o último arquivo de Ada](FINAL.md). Use as pistas que reuniu para investigar a imagem e descobrir a mensagem escondida.
 
-## Desenvolvimento e publicação
-
-Para desenvolvimento local não há build nem dependências JavaScript. No Vercel, `tools/build-site.mjs` prepara apenas os arquivos públicos em `build/site/`, conforme `vercel.json`. Para conferir a sintaxe, com Node.js instalado:
-
-```bash
-make check-js
-make test
-```
-
-Ao publicar, mantenha `web/` e `assets/` na mesma estrutura. O acesso ao jogo termina em `/web/`. Confira o endereço do repositório e a branch no link de `FINAL.md` em `web/index.html`.
-
-O repositório público e a hospedagem do jogo são etapas distintas: enviar os arquivos ao GitHub não ativa automaticamente o GitHub Pages.
-
-## Código anterior
-
-[legacy/README.md](legacy/README.md) explica os arquivos históricos de QR, C++ e extração JavaScript. Eles não são carregados pelo jogo atual.
-
-## Validação da atividade
-
-O site permanece estático. As respostas são conferidas com verificadores PBKDF2-SHA-256, salt individual e 120 mil iterações. Não há uma lista explícita de soluções. Hashes não são criptografia reversível.
-
-Isso dificulta a leitura casual do gabarito. Como os desafios são fáceis e todo o código é público, é possível testar combinações, deduzir respostas pelas pistas ou contornar o progresso no navegador. Esta versão é destinada a uma atividade educativa, sem garantia contra fraude. Os fragmentos e o extrator final também são públicos.
+A descoberta se completa quando você consegue explicar como chegou até ela.

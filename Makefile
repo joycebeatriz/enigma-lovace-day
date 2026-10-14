@@ -2,8 +2,9 @@ PYTHON ?= python3
 PORT ?= 8000
 IMAGE ?= assets/images/Ada_lovelace_com_texto.png
 
-.PHONY: help serve reveal check-js test
+.PHONY: help serve reveal check-js test build
 help:
+	@echo "make build     Prepara o site em build/site para publicação"
 	@echo "make serve     Serve o jogo em http://localhost:$(PORT)/web/"
 	@echo "make reveal    Extrai a mensagem do PNG (requer Pillow)"
 	@echo "make check-js  Confere a sintaxe dos scripts (requer Node.js)"
@@ -17,3 +18,6 @@ check-js:
 
 test: check-js
 	node tests/auth-server.test.cjs
+
+build:
+	node tools/build-site.mjs

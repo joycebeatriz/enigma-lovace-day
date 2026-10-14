@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = path.join(root, "build", "site");
-// Publish only browser assets; backend, tests and local files stay outside hosting.
+// Publica apenas os arquivos do jogo.
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 for (const directory of ["web", "assets"]) {

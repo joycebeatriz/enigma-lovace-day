@@ -18,7 +18,7 @@ Os desafios usam painéis interativos: selecionar comandos na ordem de execuçã
 
 ## Mensagem desta edição
 
-O PNG existente e o programa C++ em `legacy/cpp/` ainda têm o código antigo. Não distribua a edição antiga como prova de premiação. Crie a mensagem em um arquivo privado fora do repositório e gere uma nova imagem:
+O PNG existente ainda contém a mensagem da edição anterior. Não distribua a edição antiga como prova de premiação. Crie a mensagem em um arquivo privado fora do repositório e gere uma nova imagem:
 
 ```bash
 python3 -m pip install Pillow

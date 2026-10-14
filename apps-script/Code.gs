@@ -1,4 +1,4 @@
-/* Deploy as a Web App, execute as owner, access Anyone. Keep the spreadsheet private. */
+// Login da atividade.
 const PASSWORD_ITERATIONS = 600000;
 const SESSION_SECONDS = 3600;
 const USER_HEADERS = ['id', 'nome', 'email', 'verificador', 'criado_em', 'ultimo_acesso', 'acessos'];
@@ -28,7 +28,7 @@ function doPost(event) {
     if (!event || !event.postData || event.postData.contents.length > 4096) throw new Error('INVALID');
     const input = JSON.parse(event.postData.contents);
     if (!['challenge', 'register', 'login', 'session', 'logout'].includes(input.action)) throw new Error('INVALID');
-    // Challenge only reads properties; do not queue it behind spreadsheet writes.
+    // Consulta sem bloquear a planilha.
     if (input.action === 'challenge') return json_({ ok: true, ...handleAuth_(input) });
     lock = LockService.getScriptLock();
     if (!lock.tryLock(15000)) throw new Error('BUSY');

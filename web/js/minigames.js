@@ -1,5 +1,5 @@
 "use strict";
-/* Interactive controls for the participant journey. */
+// Controles dos desafios.
 window.mountPuzzle = function (host, index, onAnswer) {
   host.replaceChildren();
   host.className = "puzzle-console";

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Criação e extração do formato LSB BGR do Enigma Lovelace."""
+# Esteganografia LSB.
 import argparse
 from pathlib import Path
 from PIL import Image
@@ -36,7 +36,7 @@ def hide(image, text):
     return Image.frombytes('RGB', image.size, bytes(raw))
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description="Enigma Lovelace: esconder e revelar mensagens.")
     sub = parser.add_subparsers(dest='command', required=True)
     read = sub.add_parser('reveal', help='Recuperar uma mensagem do PNG')
     read.add_argument('image', type=Path)
